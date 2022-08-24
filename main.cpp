@@ -126,19 +126,89 @@ vector<vector<string>> make_move(vector<vector<string>> board, tuple<int, int> p
 //function that checks if move is legal (and if board is full)
 bool is_valid_move(vector<vector<string>> board, tuple<int, int> player_move, int player)
 {
-	//first, check if player move is open
-	if (board[get<1>(player_move)][get<0>(player_move)] == " ")
+	//first check if player move is within board bounds
+	if ((get<1>(player_move) >= 0 && get<1>(player_move) < board[get<1>(player_move)].size()) &&
+		(get<0>(player_move) >= 0 && get<0>(player_move) < board.size()))
 	{
-
+		//second, check if player move is open
+		if (board[get<1>(player_move)][get<0>(player_move)] == " ")
+		{
+			return true;
+		}
 	}
 
-
-
-	return true;
+	return false;
 }
 
 //function that checks win conditions
+void check_win(vector<vector<string>> board)
+{
+	bool winner = false;
+	
+	//check columns 
 
+	for (int row = 0; row < board.size(); row++)
+	{
+		//check if first element is an open same (stops complete blank column as being a win condition
+		
+		string first_element = board[row][0];
+		
+		if (first_element != " ")
+		{
+			for (int column = 0; board[column].size(); column++)
+			{
+				//if consecutive values are the same as the first element, continue to make winner true until it is false
+				if (first_element == board[row][column])
+				{
+					winner = true;
+				}
+				else
+				{
+					winner = false;
+					break;
+				}
+			}
+		}
+		//if a column was found to be a win, break and record true
+		if (winner == true)
+		{
+			cout << "Winner" << endl;
+		}
+	}
+
+	//check rows
+	for (int y_axis = 0; y_axis < board[0].size(); y_axis++)
+	{
+		//check if first element is an open same (stops complete blank column as being a win condition
+
+		string first_element = board[y_axis][0];
+
+		if (first_element != " ")
+		{
+			for (int x_axis = 0; board[x_axis].size(); x_axis++)
+			{
+				//if consecutive values are the same as the first element, continue to make winner true until it is false
+				if (first_element == board[x_axis][y_axis])
+				{
+					winner = true;
+				}
+				else
+				{
+					winner = false;
+					break;
+				}
+			}
+		}
+		//if a row was found to be a win, break and record true
+		if (winner == true)
+		{
+			cout << "Winner" << endl;
+		}
+	}
+
+	//check diagonal
+
+}
 
 void main()
 {
@@ -157,6 +227,8 @@ void main()
 		render(board);
 
 		player = swap_player(player);
+
+		check_win(board);
 	}
 
 
