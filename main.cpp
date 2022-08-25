@@ -145,7 +145,39 @@ void check_win(vector<vector<string>> board)
 {
 	bool winner = false;
 	
-	//check columns 
+
+	//check columns
+	for (int column = 0; column < board[0].size(); column++)
+	{
+		//check if first element is an open same (stops complete blank column as being a win condition
+
+		string first_element = board[0][column];
+
+		if (first_element != " ")
+		{
+			for (int row = 0; row < board.size(); row++)
+			{
+				//if consecutive values are the same as the first element, continue to make winner true until it is false
+				if (first_element == board[row][column])
+				{
+					winner = true;
+				}
+				else
+				{
+					winner = false;
+					break;
+				}
+			}
+		}
+		//if a row was found to be a win, break and record true
+		if (winner == true)
+		{
+			cout << "Winner column match" << endl;
+		}
+	}
+
+
+	//check rows 
 
 	for (int row = 0; row < board.size(); row++)
 	{
@@ -155,7 +187,7 @@ void check_win(vector<vector<string>> board)
 		
 		if (first_element != " ")
 		{
-			for (int column = 0; board[column].size(); column++)
+			for (int column = 0; column < board[row].size(); column++)
 			{
 				//if consecutive values are the same as the first element, continue to make winner true until it is false
 				if (first_element == board[row][column])
@@ -172,48 +204,19 @@ void check_win(vector<vector<string>> board)
 		//if a column was found to be a win, break and record true
 		if (winner == true)
 		{
-			cout << "Winner" << endl;
+			cout << "Winner row match" << endl;
 		}
 	}
 
-	//check rows
-	for (int y_axis = 0; y_axis < board[0].size(); y_axis++)
-	{
-		//check if first element is an open same (stops complete blank column as being a win condition
-
-		string first_element = board[y_axis][0];
-
-		if (first_element != " ")
-		{
-			for (int x_axis = 0; board[x_axis].size(); x_axis++)
-			{
-				//if consecutive values are the same as the first element, continue to make winner true until it is false
-				if (first_element == board[x_axis][y_axis])
-				{
-					winner = true;
-				}
-				else
-				{
-					winner = false;
-					break;
-				}
-			}
-		}
-		//if a row was found to be a win, break and record true
-		if (winner == true)
-		{
-			cout << "Winner" << endl;
-		}
-	}
 
 	//check diagonal
 
 }
 
-void main()
+void run_game()
 {
 	vector<vector<string>> board = new_board();
-	
+
 	render(board);
 
 	int player = 1;
@@ -250,5 +253,23 @@ void main()
 	//		if the board is full and no winner, declare a draw
 	// 
 	// 
+}
+
+void test_game()
+{
+	vector<vector<string>> test_board =
+	{
+		{"X","X","X"},
+		{"O","X","O"},
+		{"X","X","X"}
+
+	};
+
+	check_win(test_board);
+}
+
+void main()
+{
+	test_game();
 		
 }
