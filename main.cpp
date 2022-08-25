@@ -213,34 +213,45 @@ void check_win(vector<vector<string>> board)
 
 	//diagonal check should only work if board is a square
 
-	bool left_diagonal_winner = true;
-	bool right_diagonal_winner = true;
+	bool left_diagonal_winner = false;
+	bool right_diagonal_winner = false;
 
 	if (board.size() == board[0].size())
 	{
+		string first_element_left_diagonal = board[0][0];
+		string first_element_right_diagonal = board[0][board[0].size() - 1];
+
 		for (int row = 0; row < board.size(); row++)
 		{
-			string first_element_left_diagonal = board[0][0];
-			string first_element_right_diagonal = board[0][board[0].size() - 1];
 
-			if (first_element_left_diagonal == board[row][row] && left_diagonal_winner == true)
+
+			if (first_element_left_diagonal != " ")
 			{
-				left_diagonal_winner = true;
+				if (first_element_left_diagonal == board[row][row] && left_diagonal_winner == true)
+				{
+					left_diagonal_winner = true;
+				}
+
+
+				if (first_element_left_diagonal != board[row][row])
+				{
+					left_diagonal_winner = false;
+				}
 			}
 
-			if (first_element_right_diagonal == board[row][board[0].size() - 1 - row] && right_diagonal_winner == true)
-			{
-				right_diagonal_winner = true;
-			}
 
-			if (first_element_left_diagonal != board[row][row])
+			if (first_element_right_diagonal != " ")
 			{
-				left_diagonal_winner = false;
-			}
 
-			if (first_element_right_diagonal != board[row][board[0].size() - 1 - row])
-			{
-				right_diagonal_winner = false;
+				if (first_element_right_diagonal == board[row][board[0].size() - 1 - row] && right_diagonal_winner == true)
+				{
+					right_diagonal_winner = true;
+				}
+
+				if (first_element_right_diagonal != board[row][board[0].size() - 1 - row])
+				{
+					right_diagonal_winner = false;
+				}
 			}
 
 		}
@@ -315,6 +326,6 @@ void test_game()
 
 void main()
 {
-	test_game();
+	run_game();
 		
 }
