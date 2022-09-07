@@ -135,7 +135,7 @@ tuple<int, int> is_valid_move(vector<vector<string>> board, int player)
 		 player_move= get_move();
 
 		//first check if player move is within board bounds
-		if ((get<1>(player_move) >= 0 && get<1>(player_move) < board[get<1>(player_move)].size()) &&
+		if ((get<1>(player_move) >= 0 && get<1>(player_move) < board[0].size()) &&
 			(get<0>(player_move) >= 0 && get<0>(player_move) < board.size()))
 		{
 			//second, check if player move is open
@@ -155,7 +155,7 @@ tuple<int, int> is_valid_move(vector<vector<string>> board, int player)
 	}
 
 
-	return player_move;
+	return player_move;	
 }
 
 //function that checks win conditions
