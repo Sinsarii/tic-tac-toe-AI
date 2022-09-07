@@ -124,20 +124,38 @@ vector<vector<string>> make_move(vector<vector<string>> board, tuple<int, int> p
 }
 
 //function that checks if move is legal (and if board is full)
-bool is_valid_move(vector<vector<string>> board, tuple<int, int> player_move, int player)
+tuple<int, int> is_valid_move(vector<vector<string>> board, int player)
 {
-	//first check if player move is within board bounds
-	if ((get<1>(player_move) >= 0 && get<1>(player_move) < board[get<1>(player_move)].size()) &&
-		(get<0>(player_move) >= 0 && get<0>(player_move) < board.size()))
+
+	tuple<int, int> player_move;
+
+	while (true)
 	{
-		//second, check if player move is open
-		if (board[get<1>(player_move)][get<0>(player_move)] == " ")
+		//get the player move
+		 player_move= get_move();
+
+		//first check if player move is within board bounds
+		if ((get<1>(player_move) >= 0 && get<1>(player_move) < board[get<1>(player_move)].size()) &&
+			(get<0>(player_move) >= 0 && get<0>(player_move) < board.size()))
 		{
-			return true;
+			//second, check if player move is open
+			if (board[get<1>(player_move)][get<0>(player_move)] == " ")
+			{
+				break;
+			}
+			else
+			{
+				cout << "Move location is already taken, try again." << endl;
+			}
+		}
+		else
+		{
+			cout << "Move was not within the bounds of the board, try again." << endl;
 		}
 	}
 
-	return false;
+
+	return player_move;
 }
 
 //function that checks win conditions
@@ -279,7 +297,7 @@ void run_game()
 
 	for (int i = 0; i < 9; i++)
 	{
-		tuple<int, int> player_move = get_move();
+		tuple<int, int> player_move = is_valid_move(board, player);
 
 		board = make_move(board, player_move, player);
 
