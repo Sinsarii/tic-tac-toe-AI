@@ -1,4 +1,6 @@
 #include <iostream>
+#include <stdlib.h>
+#include <Windows.h>
 #include <vector>
 #include <string>
 #include <tuple>
@@ -29,6 +31,7 @@ vector<vector<string>> new_board()
 
 	return board;
 }
+
 //function that prints the board
 void print_board(vector<vector<string>> & board)
 {
@@ -41,14 +44,22 @@ void print_board(vector<vector<string>> & board)
 		cout <<  endl;
 	}
 }
+
 //function that pretty prints the board
 void render(vector<vector<string>>& board)
 {
 	//print top coordinate markers based on board size
 	//make a 3 space buffer around board
+
+	HANDLE hSTDout = GetStdHandle(STD_OUTPUT_HANDLE);
+
 	cout << "   ";
 	for (int i = 0; i < board.size(); i++)
 	{
+		if (i % 2)
+		{
+			
+		}
 		cout << i << " ";
 	}
 	cout << endl;
@@ -109,6 +120,7 @@ int swap_player(int player)
 	}
 	return player;
 }
+
 //function that makes move on the board
 vector<vector<string>> make_move(vector<vector<string>> board, tuple<int, int> player_move, int player)
 {
