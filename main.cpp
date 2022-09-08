@@ -153,13 +153,11 @@ tuple<int, int> is_valid_move(vector<vector<string>> board, int player)
 			cout << "Move was not within the bounds of the board, try again." << endl;
 		}
 	}
-
-
 	return player_move;	
 }
 
 //function that checks win conditions
-void check_win(vector<vector<string>> board)
+bool check_win(vector<vector<string>> board)
 {
 	bool winner = false;
 	
@@ -190,7 +188,7 @@ void check_win(vector<vector<string>> board)
 		//if a row was found to be a win, break and record true
 		if (winner == true)
 		{
-			cout << "Winner column match" << endl;
+			return winner;
 		}
 	}
 
@@ -222,7 +220,7 @@ void check_win(vector<vector<string>> board)
 		//if a column was found to be a win, break and record true
 		if (winner == true)
 		{
-			cout << "Winner row match" << endl;
+			return winner;
 		}
 	}
 
@@ -276,15 +274,40 @@ void check_win(vector<vector<string>> board)
 
 		if (left_diagonal_winner == true )
 		{
-			cout << "winner diagonal left match" << endl;
+			return winner;
 		}
 
 		if (right_diagonal_winner == true)
 		{
-			cout << "winner diagonal right match" << endl;
+			return winner;
+		}
+	}
+	return winner;
+
+}
+
+//function that checks to see if all moves have been made
+bool check_draw(vector<vector<string>> board)
+{
+	bool draw = true;
+
+	for (int row = 0; row < board.size(); row++)
+	{
+		for (int column = 0; column < board[row].size(); column++)
+		{
+			if (board[row][column] == " ")
+			{
+				draw = false;
+			}
 		}
 	}
 
+	return draw;
+}
+
+void win_print(int player)
+{
+	cout << "Player " << player << " has won." << endl;
 }
 
 void run_game()
@@ -294,6 +317,9 @@ void run_game()
 	render(board);
 
 	int player = 1;
+
+	bool winner;
+	bool draw;
 
 	for (int i = 0; i < 9; i++)
 	{
@@ -305,7 +331,21 @@ void run_game()
 
 		player = swap_player(player);
 
-		check_win(board);
+		winner = check_win(board);
+
+		draw = check_draw(board);
+
+		if (winner)
+		{
+			win_print(player);
+			break;
+		}
+		else if (draw)
+		{
+			cout << "Game is a draw" << endl;
+			break;
+		}
+
 	}
 
 
