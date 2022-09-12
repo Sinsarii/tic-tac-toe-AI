@@ -348,6 +348,32 @@ void win_print(int player)
 	cout << "Player " << player << " has won." << endl;
 }
 
+bool continue_game()
+{
+	char continue_game;
+	bool input = true;
+
+	do
+	{
+		cout << "Would you like to play another game? (Y/N)" << endl;
+		cin >> continue_game;
+		if (continue_game == 'Y' || continue_game == 'y')
+		{
+		return true;
+		}
+		else if (continue_game == 'N' || continue_game == 'n')
+		{
+			return false;
+		}
+		else
+		{
+			cout << "Please enter a valid input (Y/N)" << endl;
+		}
+	} while (true);
+
+
+}
+
 void run_game()
 {
 	vector<vector<string>> board = new_board();
@@ -358,8 +384,9 @@ void run_game()
 
 	bool winner;
 	bool draw;
+	bool continue_bool = true;
 
-	for (int i = 0; i < 9; i++)
+	while(continue_bool)
 	{
 		tuple<int, int> player_move = is_valid_move(board, player);
 
@@ -376,19 +403,31 @@ void run_game()
 		if (winner)
 		{
 			win_print(player);
-			break;
+			continue_bool = continue_game();
+			if (continue_bool == true)
+			{
+				board = new_board();
+				render(board);
+
+			}
 		}
 		else if (draw)
 		{
 			cout << "Game is a draw" << endl;
-			break;
+			continue_bool = continue_game();
+			if (continue_bool == true)
+			{
+				board = new_board();
+				render(board);
+
+			}
 		}
 
 	}
 
 
 
-	print_board(board);
+	cout << "Thanks for playing!" << endl;
 
 
 	//loop until there is a winner or the board is full
