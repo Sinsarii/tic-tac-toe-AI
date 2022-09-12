@@ -51,14 +51,15 @@ void render(vector<vector<string>>& board)
 	//print top coordinate markers based on board size
 	//make a 3 space buffer around board
 
-	HANDLE hSTDout = GetStdHandle(STD_OUTPUT_HANDLE);
+	HANDLE console_color = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	cout << "   ";
 	for (int i = 0; i < board.size(); i++)
 	{
+		SetConsoleTextAttribute(console_color, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 		if (i % 2)
 		{
-			
+			SetConsoleTextAttribute(console_color, FOREGROUND_BLUE | FOREGROUND_RED);
 		}
 		cout << i << " ";
 	}
@@ -75,14 +76,39 @@ void render(vector<vector<string>>& board)
 	//print board with a space, coordinate, and barrier before each line
 	for (int i = 0; i < board.size(); i++)
 	{
-		cout << " " << i << "|";
+		//Y-Coordinate and Left border color. Alternate Colors of numbers.
+		SetConsoleTextAttribute(console_color, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
+		if (i % 2)
+		{
+			SetConsoleTextAttribute(console_color, FOREGROUND_BLUE | FOREGROUND_RED);
+		}
+
+		cout << " " << i;
+
+		SetConsoleTextAttribute(console_color, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
+		cout << "|";
+
 		for (int j = 0; j < board[i].size(); j++)
 		{
+			//PLAYER COLORS X = YELLOW, O = CYAN
+			if (board[i][j] == "X")
+			{
+				SetConsoleTextAttribute(console_color, FOREGROUND_RED | FOREGROUND_GREEN);
+			}
+			else if (board[i][j] == "O")
+			{
+				SetConsoleTextAttribute(console_color, FOREGROUND_BLUE | FOREGROUND_GREEN);
+			}
 			cout << board[i][j] << " ";
 		}
+
+		//Right border color
+		SetConsoleTextAttribute(console_color, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 		cout << "|" << endl;
 	}
 	//print lower barrier
+	//lower border color
+	SetConsoleTextAttribute(console_color, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 	cout << "   ";
 	for (int i = 0; i < board.size(); i++)
 	{
