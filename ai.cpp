@@ -20,3 +20,12 @@ tuple<int, int> random_ai(vector<vector<string>> board)
 
 	return move;
 }
+
+tuple<int, int> find_winning_moves_ai(vector<vector<string>> board, int player)
+{
+	int x_coord, y_coord;
+
+	tuple<int, int> move = { x_coord, y_coord };
+
+	return move;
+}

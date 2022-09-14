@@ -135,35 +135,28 @@ tuple<int,int> get_move()
 }
 
 //function that swaps players after a move is made
-int swap_player(int player)
+string swap_player(string player)
 {
-	if (player == 1)
+	if (player == "X")
 	{
-		player = 2;
+		player = "O";
 	}
-	else if (player == 2)
+	else if (player == "O")
 	{
-		player = 1;
+		player = "X";
 	}
 	return player;
 }
 
 //function that makes move on the board
-vector<vector<string>> make_move(vector<vector<string>> board, tuple<int, int> player_move, int player)
+vector<vector<string>> make_move(vector<vector<string>> board, tuple<int, int> player_move, string player)
 {
-	if (player == 1)
-	{
-		board[get<1>(player_move)][get<0>(player_move)] = "X";
-	}
-	else if (player == 2)
-	{
-		board[get<1>(player_move)][get<0>(player_move)] = "O";
-	}
+	board[get<1>(player_move)][get<0>(player_move)] = player;
 	return board;
 }
 
 //function that checks if move is legal (and if board is full)
-tuple<int, int> is_valid_move(vector<vector<string>> board, int player)
+tuple<int, int> is_valid_move(vector<vector<string>> board, string player)
 {
 
 	tuple<int, int> player_move;
@@ -345,7 +338,7 @@ bool check_draw(vector<vector<string>> board)
 	return draw;
 }
 
-void win_print(int player)
+void win_print(string player)
 {
 	cout << "Player " << player << " has won." << endl;
 }
@@ -382,7 +375,7 @@ void run_game()
 
 	render(board);
 
-	int player = 1;
+	string player = "X";
 
 	bool winner;
 	bool draw;
