@@ -1,4 +1,5 @@
 #include <iostream>
+#include "ai.h"
 #include <stdlib.h>
 #include <Windows.h>
 #include <vector>
@@ -170,8 +171,9 @@ tuple<int, int> is_valid_move(vector<vector<string>> board, int player)
 	while (true)
 	{
 		//get the player move
-		 player_move= get_move();
-
+		//player_move= get_move();
+		// Get AI Move
+		player_move = random_ai(board);
 		//first check if player move is within board bounds
 		if ((get<1>(player_move) >= 0 && get<1>(player_move) < board[0].size()) &&
 			(get<0>(player_move) >= 0 && get<0>(player_move) < board.size()))
