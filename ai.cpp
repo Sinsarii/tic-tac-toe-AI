@@ -27,5 +27,16 @@ tuple<int, int> find_winning_moves_ai(vector<vector<string>> board, int player)
 
 	tuple<int, int> move = { x_coord, y_coord };
 
+	//make first available move (left -> right, up -> down)
+	for (int row = 0; row < board.size(); row++)
+	{
+		for (int col = 0; col < board[row].size(); col++)
+		{
+
+		}
+	}
+
+
 	return move;
 }
+

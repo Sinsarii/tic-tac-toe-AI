@@ -155,7 +155,34 @@ vector<vector<string>> make_move(vector<vector<string>> board, tuple<int, int> p
 	return board;
 }
 
-//function that checks if move is legal (and if board is full)
+//function that checks if move is legal
+tuple<bool, string> is_valid_moveset(vector<vector<string>> board, string player, tuple<int, int> move)
+{
+	bool legal_move;
+	string move_error;
+
+	tuple<bool, string> move_validation = { legal_move, move_error };
+
+	if ((get<1>(move) >= 0 && get<1>(move) < board[0].size()) &&
+		(get<0>(move) >= 0 && get<0>(move) < board.size()))
+	{
+		//second, check if player move is open
+		if (board[get<1>(move)][get<0>(move)] == " ")
+		{
+			return { true, "Move valid." };
+		}
+		else
+		{
+			return { false, "Move location is already taken, try again." };
+		}
+	}
+	else
+	{
+		return { false, "Move was not within the bounds of the board, try again." };
+	}
+}
+
+//function that checks if move is legal (and if board is full) **DEPRECATED**
 tuple<int, int> is_valid_move(vector<vector<string>> board, string player)
 {
 
@@ -260,21 +287,25 @@ bool check_win(vector<vector<string>> board)
 
 	//check diagonal
 
-	//diagonal check should only work if board is a square
+	//diagonal check should only work if board is a square and there is an entry in either top corner of game.
 
-	bool left_diagonal_winner = false;
-	bool right_diagonal_winner = false;
+	bool left_diagonal_winner = true;
+	bool right_diagonal_winner = true;
+	bool left_diagonal_possible = true;
+	bool right_diagonal_possible = true;
 
-	if (board.size() == board[0].size())
+	string first_element_left_diagonal = board[0][0];
+	string first_element_right_diagonal = board[0][board[0].size() - 1];
+
+	if (board.size() == board[0].size() && (first_element_left_diagonal != " " || first_element_right_diagonal != " "))
 	{
-		string first_element_left_diagonal = board[0][0];
-		string first_element_right_diagonal = board[0][board[0].size() - 1];
+		
 
 		for (int row = 0; row < board.size(); row++)
 		{
 
 
-			if (first_element_left_diagonal != " ")
+			if (first_element_left_diagonal != " " && left_diagonal_possible)
 			{
 				if (first_element_left_diagonal == board[row][row] && left_diagonal_winner == true)
 				{
@@ -285,11 +316,16 @@ bool check_win(vector<vector<string>> board)
 				if (first_element_left_diagonal != board[row][row])
 				{
 					left_diagonal_winner = false;
+					left_diagonal_possible = false;
 				}
+			}
+			else
+			{
+				left_diagonal_winner = false;
 			}
 
 
-			if (first_element_right_diagonal != " ")
+			if (first_element_right_diagonal != " " && right_diagonal_possible)
 			{
 
 				if (first_element_right_diagonal == board[row][board[0].size() - 1 - row] && right_diagonal_winner == true)
@@ -300,19 +336,24 @@ bool check_win(vector<vector<string>> board)
 				if (first_element_right_diagonal != board[row][board[0].size() - 1 - row])
 				{
 					right_diagonal_winner = false;
+					right_diagonal_possible = false;
 				}
+			}
+			else
+			{
+				right_diagonal_winner = false;
 			}
 
 		}
 
 		if (left_diagonal_winner == true )
 		{
-			return winner;
+			return left_diagonal_winner;
 		}
 
 		if (right_diagonal_winner == true)
 		{
-			return winner;
+			return right_diagonal_winner;
 		}
 	}
 	return winner;
@@ -381,15 +422,29 @@ void run_game()
 	bool draw;
 	bool continue_bool = true;
 
+	tuple<int, int> player_move;
+	tuple<bool, string> check_move;
+
 	while(continue_bool)
 	{
-		tuple<int, int> player_move = is_valid_move(board, player);
+
+		do
+		{
+			//player_move = get_move();
+			player_move = random_ai(board);
+			check_move = is_valid_moveset(board, player, player_move);
+			if (get<0>(check_move) == false)
+			{
+				cout << get<1>(check_move) << endl;
+			}
+
+		} while (get<0>(check_move) == false);
+
 
 		board = make_move(board, player_move, player);
 
 		render(board);
 
-		player = swap_player(player);
 
 		winner = check_win(board);
 
@@ -406,7 +461,7 @@ void run_game()
 
 			}
 		}
-		else if (draw)
+		else if (draw && winner == false)
 		{
 			cout << "Game is a draw" << endl;
 			continue_bool = continue_game();
@@ -417,6 +472,8 @@ void run_game()
 
 			}
 		}
+		player = swap_player(player);
+
 
 	}
 
@@ -441,21 +498,27 @@ void run_game()
 	// 
 }
 
-void test_game()
+void test_board()
 {
 	vector<vector<string>> test_board =
 	{
-		{"X","X","X"},
+		{"X","O","X"},
 		{"O","X","O"},
-		{"X","X","X"}
+		{"X","X","O"}
 
 	};
 
-	check_win(test_board);
+	bool winner;
+	bool draw;
+
+	winner = check_win(test_board);
+
+	draw = check_draw(test_board);
 }
 
 void main()
 {
 	run_game();
+	//test_board();
 		
 }
