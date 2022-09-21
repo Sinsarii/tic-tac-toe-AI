@@ -34,8 +34,8 @@ void run_game()
 
 		do
 		{
-			player_move = get_move();
-			//player_move = random_ai(board);
+			//player_move = get_move();
+			player_move = find_winning_then_blocking_moves_ai(board, player);
 			check_move = is_valid_moveset(board, player_move, player);
 			if (get<0>(check_move) == false)
 			{
@@ -108,15 +108,15 @@ void test_board()
 	{
 		{"X"," "," "},
 		{" ","X"," "},
-		{"X"," ","O"}
+		{" ","X","O"}
 
 	};
 
 	render(test_board);
 
-	tuple<int,int> ai_winning_move = find_winning_moves_ai(test_board, "O");
+	tuple<int,int> ai_winning_move = find_winning_then_blocking_moves_ai(test_board, "X");
 
-	test_board = make_move(test_board, ai_winning_move, "O");
+	test_board = make_move(test_board, ai_winning_move, "X");
 
 	render(test_board);
 
@@ -130,7 +130,7 @@ void test_board()
 
 void main()
 {
-	//run_game();
+	run_game();
 	test_board();
 		
 }

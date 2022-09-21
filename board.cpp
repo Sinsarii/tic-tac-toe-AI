@@ -151,7 +151,7 @@ string swap_player(string player)
 //function that makes move on the board
 vector<vector<string>> make_move(vector<vector<string>> board, tuple<int, int> player_move, string player)
 {
-	board[get<1>(player_move)][get<0>(player_move)] = player;
+	board[get<0>(player_move)][get<1>(player_move)] = player;
 	return board;
 }
 
@@ -167,7 +167,7 @@ tuple<bool, string> is_valid_moveset(vector<vector<string>> board, tuple<int, in
 		(get<0>(move) >= 0 && get<0>(move) < board.size()))
 	{
 		//second, check if player move is open
-		if (board[get<1>(move)][get<0>(move)] == " ")
+		if (board[get<0>(move)][get<1>(move)] == " ")
 		{
 			return { true, "Move valid." };
 		}
@@ -199,7 +199,7 @@ tuple<int, int> is_valid_move(vector<vector<string>> board, string player)
 			(get<0>(player_move) >= 0 && get<0>(player_move) < board.size()))
 		{
 			//second, check if player move is open
-			if (board[get<1>(player_move)][get<0>(player_move)] == " ")
+			if (board[get<0>(player_move)][get<1>(player_move)] == " ")
 			{
 				break;
 			}
