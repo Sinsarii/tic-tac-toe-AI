@@ -15,6 +15,12 @@ using namespace std;
 
 /************* TODO LIST *************/
 
+struct check_move
+{
+	bool valid_move;
+	string error_message;
+};
+
 //function that creates a board
 vector<vector<string>> new_board()
 {
@@ -118,8 +124,7 @@ void render(vector<vector<string>>& board)
 	cout << endl;
 }
 
-//function that gets move from player
-tuple<int, int> get_move()
+tuple<int, int> human_player()
 {
 	int x_coord, y_coord;
 
@@ -133,6 +138,25 @@ tuple<int, int> get_move()
 
 	return player_move;
 }
+
+
+//function that gets move from player
+tuple<int, int> get_move(vector<vector<string>> board, string player, string player_id)
+{
+	if (player_id == "randomAI")
+	{
+		return ai_random_move(board, player);
+	}
+	else if (player_id == "smartAI")
+	{
+		return find_winning_then_blocking_moves_ai(board, player);
+	}
+	else
+	{
+		return human_player();
+	}
+}
+
 
 //function that swaps players after a move is made
 string swap_player(string player)
@@ -156,30 +180,31 @@ vector<vector<string>> make_move(vector<vector<string>> board, tuple<int, int> p
 }
 
 //function that checks if move is legal
-tuple<bool, string> is_valid_moveset(vector<vector<string>> board, tuple<int, int> move, string player)
+check_move is_valid_moveset(vector<vector<string>> board, tuple<int, int> move, string player)
 {
-	bool legal_move;
-	string move_error;
-
-	tuple<bool, string> move_validation = { legal_move, move_error };
-
+	check_move movecheck;
+	
 	if ((get<1>(move) >= 0 && get<1>(move) < board[0].size()) &&
 		(get<0>(move) >= 0 && get<0>(move) < board.size()))
 	{
 		//second, check if player move is open
 		if (board[get<0>(move)][get<1>(move)] == " ")
 		{
-			return { true, "Move valid." };
+			movecheck.valid_move = true;
+			movecheck.error_message = "Move valid.";
 		}
 		else
 		{
-			return { false, "Move location is already taken, try again." };
+			movecheck.valid_move = false;
+			movecheck.error_message = "Move location is already taken, try again.";
 		}
 	}
 	else
 	{
-		return { false, "Move was not within the bounds of the board, try again." };
+		movecheck.valid_move = false;
+		movecheck.error_message = "Move was not within the bounds of the board, try again.";
 	}
+	return movecheck;
 }
 
 //function that checks if move is legal (and if board is full) **DEPRECATED**
@@ -191,7 +216,7 @@ tuple<int, int> is_valid_move(vector<vector<string>> board, string player)
 	while (true)
 	{
 		//get the player move
-		player_move= get_move();
+		//player_move= get_move();
 		// Get AI Move
 		//player_move = random_ai(board);
 		//first check if player move is within board bounds
@@ -379,12 +404,30 @@ bool check_draw(vector<vector<string>> board)
 	return draw;
 }
 
+void check_endstate(vector<vector<string>> board, string player)
+{
+	bool winner = check_win(board);
+
+	bool draw = check_draw(board);
+
+	if (winner = true)
+	{
+		cout << player << " has won!" << endl;
+
+	}
+	else if (draw == true)
+	{
+
+	}
+
+}
+
 void win_print(string player)
 {
 	cout << "Player " << player << " has won." << endl;
 }
 
-bool continue_game()
+bool check_continue()
 {
 	char continue_game;
 	bool input = true;

@@ -13,7 +13,7 @@ tuple<int, int> ai_random_move(vector<vector<string>> board, string player)
 
 	//random x coordinate
 	tuple<int, int> move;
-	tuple<bool, string> is_valid_ai_move;
+	check_move move_check;
 
 	do
 	{
@@ -23,9 +23,9 @@ tuple<int, int> ai_random_move(vector<vector<string>> board, string player)
 
 	move = { x_coord, y_coord };
 
-	is_valid_ai_move = is_valid_moveset(board, move, player);
+	move_check = is_valid_moveset(board, move, player);
 
-	}while (get<0>(is_valid_ai_move) == false);
+	}while (move_check.valid_move == false);
 
 	return move;
 }
@@ -44,9 +44,9 @@ tuple<int, int> find_winning_moves_ai(vector<vector<string>> board, string playe
 		for (int col = 0; col < board[row].size(); col++)
 		{
 			vector<vector<string>> temp_board = board;
-			tuple<bool, string> movecheck = is_valid_moveset(temp_board, { row, col }, player);
+			check_move move_check = is_valid_moveset(temp_board, { row, col }, player);
 
-			if (get<0>(movecheck))
+			if (move_check.valid_move)
 			{
 				temp_board = make_move(temp_board, { row, col }, player);
 				if (check_win(temp_board))
@@ -79,9 +79,9 @@ tuple<int, int> find_winning_then_blocking_moves_ai(vector<vector<string>> board
 		{
 			vector<vector<string>> temp_board_win_move = board;
 			vector<vector<string>> temp_board_block_move = board;
-			tuple<bool, string> movecheck = is_valid_moveset(board, { row, col }, player);
+			check_move move_check = is_valid_moveset(board, { row, col }, player);
 
-			if (get<0>(movecheck))
+			if (move_check.valid_move)
 			{
 				temp_board_win_move = make_move(board, { row, col }, player);
 				temp_board_block_move = make_move(board, { row, col }, opponent);
