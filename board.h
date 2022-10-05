@@ -18,17 +18,24 @@ struct check_move
 	string error_message;
 }typedef check_move;
 
+struct Player {
+	string player_name;
+	string player_symbol;
+};
+
 vector<vector<string>> new_board();
 
 void print_board(vector<vector<string>>& board);
 
 void render(vector<vector<string>>& board);
 
-tuple<int, int> get_move(vector<vector<string>> board, string player, string player_id);
+tuple<int, int> get_move(vector<vector<string>> board, string player_name, string player_symbol);
 
 tuple<int, int> human_player();
 
 string swap_player(string player);
+
+Player set_player(vector<Player> player_list, Player current_player);
 
 vector<vector<string>> make_move(vector<vector<string>> board, tuple<int, int> player_move, string player);
 

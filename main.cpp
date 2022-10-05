@@ -18,13 +18,14 @@ using namespace std;
 
 
 
-vector<string> get_players(int number_players)
+vector<Player> get_players(int number_players)
 {
 	int menu_input;
 	vector<string> symbols_list = { "X", "O", "#", "$", "&" };
 	string player_name_input;
-	std::map<string, string> player_list;
+	vector<Player> player_list;
 	vector<string> player_names;
+	Player current_player;
 
 	for(int i = 0; i < number_players; i++)
 	{
@@ -40,15 +41,18 @@ vector<string> get_players(int number_players)
 		case 1:
 			cout << "Enter your name." << endl;
 			cin >> player_name_input;
+			break;
 		case 2:
 			player_name_input = "randomAI";
+			break;
 		case 3:
 			player_name_input = "smartAI";
+			break;
 		}
 
-		player_names.push_back(player_name_input);
-
-		player_list.insert({ player_name_input, symbols_list[i] });
+		current_player.player_name = player_name_input;
+		current_player.player_symbol = symbols_list[i];
+		player_list.push_back(current_player);
 	}
 
 
@@ -74,7 +78,7 @@ vector<string> get_players(int number_players)
 
 	player_names.push_back(player_name_input);
 	*/
-	return player_names;
+	return player_list;
 	
 }
 
@@ -97,10 +101,12 @@ void play()
 	std::function <tuple<int, int>(vector<vector<string>>, string)> AI;
 
 	//get the player names
-	vector<string> player_names = get_players(2);
+	//vector<string> player_names = get_players(2);
+	vector<Player> player_list = get_players(2);
+	 
+	Player current_player;
 
-	string current_player = "X";
-	string current_player_id = player_names[0];
+	current_player = player_list[0];
 
 	//Start Game
 
@@ -110,11 +116,13 @@ void play()
 	while (continue_game)
 	{
 
+
+
 		do
 		{
-			player_move = get_move(board, current_player, current_player_id);
+			player_move = get_move(board, current_player.player_name, current_player.player_symbol);
 
-			move_check = is_valid_moveset(board, player_move, current_player);
+			move_check = is_valid_moveset(board, player_move, current_player.player_symbol);
 
 			//if move is false, show error message
 
@@ -128,13 +136,13 @@ void play()
 
 		//make the move since it now valid
 
-		board = make_move(board, player_move, current_player);
+		board = make_move(board, player_move, current_player.player_symbol);
 
 		render(board);
 
 		//check if there is an endstate to the board (win or draw)
 
-		if (check_endstate(board, current_player))
+		if (check_endstate(board, current_player.player_symbol))
 		{
 			continue_game = check_continue();
 
@@ -144,8 +152,8 @@ void play()
 			}
 		}
 
-
-		current_player = swap_player(current_player);
+		current_player = set_player(player_list, current_player);
+		//current_player = swap_player(current_player);
 
 	}
 }

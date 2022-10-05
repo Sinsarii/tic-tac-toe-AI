@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <tuple>
+#include <map>
 
 using std::string;
 using std::vector;
@@ -14,6 +15,10 @@ using std::cin;
 using namespace std;
 
 /************* TODO LIST *************/
+struct Player {
+	string player_name;
+	string player_symbol;
+};
 
 struct check_move
 {
@@ -141,15 +146,15 @@ tuple<int, int> human_player()
 
 
 //function that gets move from player
-tuple<int, int> get_move(vector<vector<string>> board, string player, string player_id)
+tuple<int, int> get_move(vector<vector<string>> board, string player_name, string player_symbol)
 {
-	if (player_id == "randomAI")
+	if (player_name == "randomAI")
 	{
-		return ai_random_move(board, player);
+		return ai_random_move(board, player_name);
 	}
-	else if (player_id == "smartAI")
+	else if (player_name == "smartAI")
 	{
-		return find_winning_then_blocking_moves_ai(board, player);
+		return find_winning_then_blocking_moves_ai(board, player_symbol);
 	}
 	else
 	{
@@ -172,6 +177,31 @@ string swap_player(string player)
 	return player;
 }
 
+Player set_player(vector<Player> player_list, Player current_player)
+{
+	//find current player
+	Player next_player;
+
+
+	for (int i = 0; i < player_list.size(); i++)
+	{
+		if (player_list[i].player_name == current_player.player_name)
+		{
+			if ((i + 1) >= player_list.size())
+			{
+				next_player = player_list[0];
+			}
+			else
+			{
+				next_player = player_list[++i];
+			}
+		}
+	}
+
+	//iterate to next player down the list, go back to beginning if necessary
+
+	return next_player;
+}
 //function that makes move on the board
 vector<vector<string>> make_move(vector<vector<string>> board, tuple<int, int> player_move, string player)
 {
