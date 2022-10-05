@@ -404,22 +404,26 @@ bool check_draw(vector<vector<string>> board)
 	return draw;
 }
 
-void check_endstate(vector<vector<string>> board, string player)
+bool check_endstate(vector<vector<string>> board, string player)
 {
-	bool winner = check_win(board);
+	bool winner = false;
+	bool draw = false;
 
-	bool draw = check_draw(board);
+	winner = check_win(board);
+	draw = check_draw(board);
 
-	if (winner = true)
+	if (winner)
 	{
 		cout << player << " has won!" << endl;
+		return true;
 
 	}
-	else if (draw == true)
+	else if (draw)
 	{
-
+		cout << "There are no more moves left, the game is a draw." << endl;
+		return true;
 	}
-
+	return false;
 }
 
 void win_print(string player)
@@ -431,6 +435,8 @@ bool check_continue()
 {
 	char continue_game;
 	bool input = true;
+
+	
 
 	do
 	{

@@ -7,6 +7,7 @@
 #include <string>
 #include <tuple>
 #include <functional>
+#include <map>
 
 using std::string;
 using std::vector;
@@ -17,58 +18,64 @@ using namespace std;
 
 
 
-vector<string> get_players()
+vector<string> get_players(int number_players)
 {
-	int player1, player2;
-	string player1_name, player2_name;
-
+	int menu_input;
+	vector<string> symbols_list = { "X", "O", "#", "$", "&" };
+	string player_name_input;
+	std::map<string, string> player_list;
 	vector<string> player_names;
 
-	cout	<< "Select who will go first:" << endl
+	for(int i = 0; i < number_players; i++)
+	{
+		cout << "Select Player " << (i + 1) << endl
 			<< "1. Player" << endl
 			<< "2. Random AI" << endl
-			<< "3. Smart AI";
-	
-	cin >> player1;
+			<< "3. Smart AI" << endl;
 
-	switch (player1)
-	{
-	case 1:
-		cout << "Enter your name." << endl;
-		cin >> player1_name;
-		player_names.push_back(player1_name);
-	case 2: 
-		player1_name = "randomAI";
-	case 3:
-		player1_name = "smartAI";
+		cin >> menu_input;
+
+		switch (menu_input)
+		{
+		case 1:
+			cout << "Enter your name." << endl;
+			cin >> player_name_input;
+		case 2:
+			player_name_input = "randomAI";
+		case 3:
+			player_name_input = "smartAI";
+		}
+
+		player_names.push_back(player_name_input);
+
+		player_list.insert({ player_name_input, symbols_list[i] });
 	}
 
-	player_names.push_back(player1_name);
 
-
+	/*
 
 	cout	<< "Select who will go second:" << endl
 			<< "1. Player" << endl
 			<< "2. Random AI" << endl
 			<< "3. Smart AI" << endl;
 	
-	cin >> player2;
+	cin >> menu_input;
 
-	switch (player2)
+	switch (menu_input)
 	{
 	case 1:
 		cout << "Enter your name." << endl;
-		cin >> player2_name;
+		cin >> player_name_input;
 	case 2:
-		player2_name = "randomAI";
+		player_name_input = "randomAI";
 	case 3:
-		player2_name = "smartAI";
+		player_name_input = "smartAI";
 	}
 
-	player_names.push_back(player2_name);
-
+	player_names.push_back(player_name_input);
+	*/
 	return player_names;
-
+	
 }
 
 void play()
@@ -77,7 +84,6 @@ void play()
 	vector<vector<string>> board = new_board();
 
 	//display empty board
-	render(board);
 
 	bool continue_game = true;
 	bool winner = false;
@@ -91,14 +97,19 @@ void play()
 	std::function <tuple<int, int>(vector<vector<string>>, string)> AI;
 
 	//get the player names
-	vector<string> player_names = get_players();
+	vector<string> player_names = get_players(2);
 
 	string current_player = "X";
 	string current_player_id = player_names[0];
 
 	//Start Game
+
+	render(board);
+
+
 	while (continue_game)
 	{
+
 		do
 		{
 			player_move = get_move(board, current_player, current_player_id);
@@ -123,139 +134,20 @@ void play()
 
 		//check if there is an endstate to the board (win or draw)
 
-
-		winner = check_win(board);
-
-		draw = check_draw(board);
-
-
-		if (winner)
+		if (check_endstate(board, current_player))
 		{
-			win_print(current_player);
 			continue_game = check_continue();
-			if (continue_game == true)
+
+			if (continue_game)
 			{
 				board = new_board();
-				render(board);
-
 			}
 		}
-		else if (draw && winner == false)
-		{
-			cout << "Game is a draw" << endl;
-			continue_game = check_continue();
-			if (continue_game == true)
-			{
-				board = new_board();
-				render(board);
 
-			}
-		}
+
 		current_player = swap_player(current_player);
 
 	}
-}
-
-void run_game()
-{
-	vector<vector<string>> board = new_board();
-
-	render(board);
-
-	string player = "X";
-
-	bool winner;
-	bool draw;
-	bool continue_bool = true;
-
-	tuple<int, int> player_move;
-	tuple<bool, string> check_move;
-
-	//Polymorphic function wrapper to call different type of AI function
-	std::function <tuple<int, int>(vector<vector<string>>, string)> AI;
-
-	while(continue_bool)
-	{
-
-		do
-		{
-			//player_move = get_move();
-			if (player == "X")
-			{
-				AI = ai_random_move;
-			}
-			else
-			{
-				AI = find_winning_then_blocking_moves_ai;
-			}
-
-			player_move = AI(board, player);
-
-			//player_move = find_winning_then_blocking_moves_ai(board, player);
-			//check_move = is_valid_moveset(board, player_move, player);
-			if (get<0>(check_move) == false)
-			{
-				cout << get<1>(check_move) << endl;
-			}
-
-		} while (get<0>(check_move) == false);
-
-
-		board = make_move(board, player_move, player);
-
-		render(board);
-
-
-		winner = check_win(board);
-
-		draw = check_draw(board);
-
-		if (winner)
-		{
-			win_print(player);
-			continue_bool = check_continue();
-			if (continue_bool == true)
-			{
-				board = new_board();
-				render(board);
-
-			}
-		}
-		else if (draw && winner == false)
-		{
-			cout << "Game is a draw" << endl;
-			continue_bool = check_continue();
-			if (continue_bool == true)
-			{
-				board = new_board();
-				render(board);
-
-			}
-		}
-		player = swap_player(player);
-
-
-	}
-
-
-
-	cout << "Thanks for playing!" << endl;
-
-
-	//loop until there is a winner or the board is full
-	//	print the board
-	//	
-	//	get move from player
-	// 
-	//	check if the move is legal
-	// 
-	//	make the move on the board
-	// 
-	//	check if move is winning
-	//		if it is winner, declare winner and break out of loop
-	//		if the board is full and no winner, declare a draw
-	// 
-	// 
 }
 
 void test_board()
@@ -286,6 +178,11 @@ void test_board()
 
 void menu()
 {
+
+
+	//ask what game they will play
+
+	//ask for players or ai
 
 }
 

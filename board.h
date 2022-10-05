@@ -41,6 +41,9 @@ bool check_win(vector<vector<string>> board);
 
 bool check_draw(vector<vector<string>> board);
 
+bool check_endstate(vector<vector<string>> board, string player);
+
+
 void win_print(string player);
 
 bool check_continue();
