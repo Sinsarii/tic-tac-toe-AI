@@ -149,11 +149,11 @@ void play()
 			if (continue_game)
 			{
 				board = new_board();
+				current_player = player_list[0];
 			}
 		}
 
 		current_player = set_player(player_list, current_player);
-		//current_player = swap_player(current_player);
 
 	}
 }
