@@ -26,6 +26,12 @@ struct check_move
 	string error_message;
 };
 
+struct winner
+{
+	string player_name;
+	int number_of_wins;
+};
+
 //function that creates a board
 vector<vector<string>> new_board()
 {
@@ -488,3 +494,29 @@ bool check_continue()
 
 
 }
+
+vector<winner> archive_wins(vector<winner> game_record, Player current_winner)
+{
+	winner new_winner;
+	new_winner.player_name = current_winner.player_name;
+	new_winner.number_of_wins = 1;
+
+	if (game_record.size() == 0)
+	{
+		game_record.push_back(new_winner);
+		return game_record;
+	}
+
+
+	for (int i = 0; i < game_record.size(); i++)
+	{
+		if (game_record[i].player_name == current_winner.player_name)
+		{
+			game_record[i].number_of_wins = game_record[i].number_of_wins + 1;
+			return game_record;
+		}
+	}
+	game_record.push_back(new_winner);
+	return game_record;
+}
+

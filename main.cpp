@@ -82,7 +82,8 @@ vector<Player> get_players(int number_players)
 	
 }
 
-void play()
+
+Player play(vector<Player> player_list)
 {
 	//Create a new board
 	vector<vector<string>> board = new_board();
@@ -102,7 +103,6 @@ void play()
 
 	//get the player names
 	//vector<string> player_names = get_players(2);
-	vector<Player> player_list = get_players(2);
 	 
 	Player current_player;
 
@@ -144,13 +144,7 @@ void play()
 
 		if (check_endstate(board, current_player.player_symbol))
 		{
-			continue_game = check_continue();
-
-			if (continue_game)
-			{
-				board = new_board();
-				current_player = player_list[0];
-			}
+			return current_player;
 		}
 
 		current_player = set_player(player_list, current_player);
@@ -196,7 +190,21 @@ void menu()
 
 void main()
 {
-	play();
+	vector<winner> game_record;
+
+	bool continue_game = true;
+	int test_amount = 0;
+	Player current_winner;
+	//menu to get player information
+	vector<Player> Player_list = get_players(2);
+	//play game
+	do
+	{
+		current_winner = play(Player_list);
+		//continue_game = check_continue();
+		game_record = archive_wins(game_record, current_winner);
+		test_amount++;
+	} while (continue_game && (test_amount < 100));
 	test_board();
 		
 }

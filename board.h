@@ -23,6 +23,12 @@ struct Player {
 	string player_symbol;
 };
 
+struct winner
+{
+	string player_name;
+	int number_of_wins;
+};
+
 vector<vector<string>> new_board();
 
 void print_board(vector<vector<string>>& board);
@@ -54,3 +60,5 @@ bool check_endstate(vector<vector<string>> board, string player);
 void win_print(string player);
 
 bool check_continue();
+
+vector<winner> archive_wins(vector<winner> game_record, Player current_winner);
