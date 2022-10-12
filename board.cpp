@@ -278,7 +278,7 @@ tuple<int, int> is_valid_move(vector<vector<string>> board, string player)
 }
 
 //function that checks win conditions
-bool check_win(vector<vector<string>> board)
+bool check_win(vector<vector<string>> board, string current_player)
 {
 	bool winner = false;
 
@@ -288,7 +288,7 @@ bool check_win(vector<vector<string>> board)
 	{
 		//check if first element is an open same (stops complete blank column as being a win condition
 
-		string first_element = board[0][column];
+		string first_element = current_player;
 
 		if (first_element != " ")
 		{
@@ -320,7 +320,7 @@ bool check_win(vector<vector<string>> board)
 	{
 		//check if first element is an open same (stops complete blank column as being a win condition
 
-		string first_element = board[row][0];
+		string first_element = current_player;
 
 		if (first_element != " ")
 		{
@@ -355,8 +355,8 @@ bool check_win(vector<vector<string>> board)
 	bool left_diagonal_possible = true;
 	bool right_diagonal_possible = true;
 
-	string first_element_left_diagonal = board[0][0];
-	string first_element_right_diagonal = board[0][board[0].size() - 1];
+	string first_element_left_diagonal = current_player;
+	string first_element_right_diagonal = current_player;
 
 	if (board.size() == board[0].size() && (first_element_left_diagonal != " " || first_element_right_diagonal != " "))
 	{
@@ -445,7 +445,7 @@ bool check_endstate(vector<vector<string>> board, string player)
 	bool winner = false;
 	bool draw = false;
 
-	winner = check_win(board);
+	winner = check_win(board, player);
 	draw = check_draw(board);
 
 	if (winner)

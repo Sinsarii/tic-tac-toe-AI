@@ -50,7 +50,7 @@ check_move is_valid_moveset(vector<vector<string>> board, tuple<int, int> move, 
 /*DEPRECATED*/
 //tuple<int, int> is_valid_move(vector<vector<string>> board, string player);
 
-bool check_win(vector<vector<string>> board);
+bool check_win(vector<vector<string>> board, string current_player);
 
 bool check_draw(vector<vector<string>> board);
 

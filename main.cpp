@@ -154,6 +154,8 @@ Player play(vector<Player> player_list)
 
 void test_board()
 {
+	vector<tuple<int, int>> possible_moves;
+
 	vector<vector<string>> test_board =
 	{
 		{"X"," "," "},
@@ -162,6 +164,7 @@ void test_board()
 
 	};
 
+	possible_moves = get_legal_moves(test_board);
 	render(test_board);
 
 	tuple<int,int> ai_winning_move = find_winning_then_blocking_moves_ai(test_board, "X");
@@ -173,22 +176,14 @@ void test_board()
 	bool winner;
 	bool draw;
 
-	winner = check_win(test_board);
+	winner = check_win(test_board, "X");
 
 	draw = check_draw(test_board);
 }
 
-void menu()
-{
 
 
-	//ask what game they will play
-
-	//ask for players or ai
-
-}
-
-void main()
+void play_game()
 {
 	vector<winner> game_record;
 
@@ -204,8 +199,18 @@ void main()
 		//continue_game = check_continue();
 		game_record = archive_wins(game_record, current_winner);
 		test_amount++;
-	} while (continue_game && (test_amount < 100));
+	} while (continue_game && (test_amount < 10));
 	test_board();
 		
 }
 
+void main()
+{
+	play_game();
+	//test_board();
+
+	//ask what game they will play
+
+	//ask for players or ai
+
+}
