@@ -162,6 +162,10 @@ tuple<int, int> get_move(vector<vector<string>> board, string player_name, strin
 	{
 		return find_winning_then_blocking_moves_ai(board, player_symbol);
 	}
+	else if (player_name == "minmaxAI")
+	{
+		return minmax(board, player_symbol);
+	}
 	else
 	{
 		return human_player();

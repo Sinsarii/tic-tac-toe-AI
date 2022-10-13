@@ -32,7 +32,8 @@ vector<Player> get_players(int number_players)
 		cout << "Select Player " << (i + 1) << endl
 			<< "1. Player" << endl
 			<< "2. Random AI" << endl
-			<< "3. Smart AI" << endl;
+			<< "3. Smart AI" << endl
+			<< "4. Minmax AI" << endl;
 
 		cin >> menu_input;
 
@@ -47,6 +48,9 @@ vector<Player> get_players(int number_players)
 			break;
 		case 3:
 			player_name_input = "smartAI";
+			break;
+		case 4:
+			player_name_input = "minmaxAI";
 			break;
 		}
 
@@ -181,7 +185,18 @@ void test_board()
 	draw = check_draw(test_board);
 }
 
+void test_ai()
+{
+	vector<vector<string>> test_board =
+	{
+		{" "," "," "},
+		{" "," "," "},
+		{" "," "," "}
 
+	};
+
+	tuple<int, int> move = minmax(test_board, "X");
+}
 
 void play_game()
 {
@@ -208,7 +223,7 @@ void main()
 {
 	play_game();
 	//test_board();
-
+	//test_ai();
 	//ask what game they will play
 
 	//ask for players or ai

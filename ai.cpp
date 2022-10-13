@@ -3,10 +3,32 @@
 #include <iostream>
 #include <string>
 #include <tuple>
+#include <algorithm>
 
+using std::max_element;
+using std::min_element;
 using std::vector;
 using std::tuple;
 using std::string;
+
+vector<tuple<int, int>> get_legal_moves(vector<vector<string>> board)
+{
+
+	vector<tuple<int, int>> possible_moves;
+
+	for (int row = 0; row < board.size(); row++)
+	{
+		for (int column = 0; column < board[row].size(); column++)
+		{
+			if (board[row][column] == " ")
+			{
+				possible_moves.push_back({ row, column });
+			}
+		}
+	}
+
+	return possible_moves;
+}
 
 tuple<int, int> ai_random_move(vector<vector<string>> board, string player)
 {
@@ -112,23 +134,14 @@ tuple<int, int> find_winning_then_blocking_moves_ai(vector<vector<string>> board
 
 }
 
-tuple<int, int> minmax(vector<vector<string>> board, string current_player)
-{
-	tuple<int, int> move;
-	string opponent = swap_player(current_player);
-	
-	//call minmax_score to calculate the value of all available moves
-	
-
-	return move;
-}
 
 int minmax_score(vector<vector<string>> board, string current_player, string opponent, string alternating_player)
 {
+
 	//if there is a terminal state, end immediatly
 	if (check_win(board, current_player))
 	{
-		return 10;
+		return +10;
 	}
 	else if (check_win(board, opponent))
 	{
@@ -140,28 +153,64 @@ int minmax_score(vector<vector<string>> board, string current_player, string opp
 	}
 
 	//if board is not in a terminal state, get all possible moves
-	tuple<int, int> move;
-	vector<tuple<int, int>> possible_moves;
+	vector<tuple<int, int>> possible_moves = get_legal_moves(board);
+	vector<int> scores;
+	int score;
+	//iterate through all moves and get a score for each move
+	for (int i = 0; i < possible_moves.size(); i++)
+	{
+		//copy current board
+		vector<vector<string>> new_board = board;
+		//make move on new board
+		new_board = make_move(board, possible_moves[i], alternating_player);
+		
+		//get score from new board and swap player
+		score = minmax_score(new_board, current_player, opponent, swap_player(alternating_player));
+
+		scores.push_back(score);
+
+	}
+
+	if (alternating_player == current_player)
+	{
+		return *max_element(scores.begin(), scores.end());
+	}
+	else
+	{
+		return *min_element(scores.begin(), scores.end());
+	}
 
 
-	return 0;
 }
 
-vector<tuple<int, int>> get_legal_moves(vector<vector<string>> board)
+tuple<int, int> minmax(vector<vector<string>> board, string current_player)
 {
+	tuple<int, int> move;
 
-	vector<tuple<int, int>> possible_moves;
+	string opponent = swap_player(current_player);
 
-	for (int row = 0; row < board.size(); row++)
+	//call minmax_score to calculate the value of all available moves
+	vector<tuple<int, int>> possible_moves = get_legal_moves(board);
+
+	//initialize at less than -10 so that all numbers will be larger
+	int top_score = -20;
+
+	for (int i = 0; i < possible_moves.size(); i++)
 	{
-		for (int column = 0; column < board[row].size(); column++)
+		// copy current board
+		vector<vector<string>> new_board = board;
+
+		//make move on new board
+		new_board = make_move(board, possible_moves[i], current_player);
+
+		int score = minmax_score(new_board, current_player, opponent, swap_player(current_player));
+
+		if (score > top_score)
 		{
-			if (board[row][column] == " ")
-			{
-				possible_moves.push_back({ row, column });
-			}
+			top_score = score;
+			move = possible_moves[i];
 		}
 	}
 
-	return possible_moves;
+	return move;
 }
