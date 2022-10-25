@@ -1,5 +1,8 @@
 #include <iostream>
-#include "ai.h"
+//#include "ai.h"
+#include "Player.h"
+#include "winner.h"
+#include "Board.h"
 #include <stdlib.h>
 #include <Windows.h>
 #include <vector>
@@ -15,25 +18,59 @@ using std::cin;
 using namespace std;
 
 /************* TODO LIST *************/
-struct Player {
-	string player_name;
-	string player_symbol;
-};
 
-struct check_move
+struct Board::check_move
 {
 	bool valid_move;
 	string error_message;
 };
 
-struct winner
+vector<Player> Board::get_players(int number_players)
 {
-	string player_name;
-	int number_of_wins;
-};
+	int menu_input;
+	vector<string> symbols_list = { "X", "O", "#", "$", "&" };
+	string player_name_input;
+	vector<Player> player_list;
+	vector<string> player_names;
+	Player current_player;
+
+	for (int i = 0; i < number_players; i++)
+	{
+		cout << "Select Player " << (i + 1) << endl
+			<< "1. Player" << endl
+			<< "2. Random AI" << endl
+			<< "3. Smart AI" << endl
+			<< "4. Minmax AI" << endl;
+
+		cin >> menu_input;
+
+		switch (menu_input)
+		{
+		case 1:
+			cout << "Enter your name." << endl;
+			cin >> player_name_input;
+			break;
+		case 2:
+			player_name_input = "randomAI";
+			break;
+		case 3:
+			player_name_input = "smartAI";
+			break;
+		case 4:
+			player_name_input = "minmaxAI";
+			break;
+		}
+
+		current_player.player_name = player_name_input;
+		current_player.player_symbol = symbols_list[i];
+		player_list.push_back(current_player);
+	}
+	return player_list;
+
+}
 
 //function that creates a board
-vector<vector<string>> new_board()
+vector<vector<string>> Board::new_board()
 {
 	string NONE = " ";
 
@@ -43,15 +80,21 @@ vector<vector<string>> new_board()
 	vector<string> l2 = { NONE,NONE,NONE };
 	vector<string> l3 = { NONE, NONE, NONE };
 
+	//vector<string> l1 = { NONE, NONE, NONE,NONE };
+	//vector<string> l2 = { NONE,NONE,NONE,NONE };
+	//vector<string> l3 = { NONE, NONE, NONE ,NONE };
+	//vector<string> l4 = { NONE, NONE, NONE,NONE };
+
 	board.push_back(l1);
 	board.push_back(l2);
 	board.push_back(l3);
+	//board.push_back(l4);
 
 	return board;
 }
 
 //function that prints the board
-void print_board(vector<vector<string>>& board)
+void Board::print_board(vector<vector<string>>& board)
 {
 	for (int i = 0; i < board.size(); i++)
 	{
@@ -64,7 +107,7 @@ void print_board(vector<vector<string>>& board)
 }
 
 //function that pretty prints the board
-void render(vector<vector<string>>& board)
+void Board::render(vector<vector<string>>& board)
 {
 	//print top coordinate markers based on board size
 	//make a 3 space buffer around board
@@ -135,7 +178,7 @@ void render(vector<vector<string>>& board)
 	cout << endl;
 }
 
-tuple<int, int> human_player()
+tuple<int, int> Board::human_player()
 {
 	int x_coord, y_coord;
 
@@ -150,21 +193,20 @@ tuple<int, int> human_player()
 	return player_move;
 }
 
-
 //function that gets move from player
-tuple<int, int> get_move(vector<vector<string>> board, string player_name, string player_symbol)
+tuple<int, int> Board::get_move(vector<vector<string>> board, string player_name, string player_symbol)
 {
 	if (player_name == "randomAI")
 	{
-		return ai_random_move(board, player_name);
+		//return ai_random_move(board, player_name);
 	}
 	else if (player_name == "smartAI")
 	{
-		return find_winning_then_blocking_moves_ai(board, player_symbol);
+		//return find_winning_then_blocking_moves_ai(board, player_symbol);
 	}
 	else if (player_name == "minmaxAI")
 	{
-		return minmax(board, player_symbol);
+		//return minmax(board, player_symbol);
 	}
 	else
 	{
@@ -172,9 +214,8 @@ tuple<int, int> get_move(vector<vector<string>> board, string player_name, strin
 	}
 }
 
-
 //function that swaps players after a move is made
-string swap_player(string player)
+string Board::swap_player(string player)
 {
 	if (player == "X")
 	{
@@ -187,7 +228,7 @@ string swap_player(string player)
 	return player;
 }
 
-Player set_player(vector<Player> player_list, Player current_player)
+Player Board::set_player(vector<Player> player_list, Player current_player)
 {
 	//find current player
 	Player next_player;
@@ -195,7 +236,7 @@ Player set_player(vector<Player> player_list, Player current_player)
 
 	for (int i = 0; i < player_list.size(); i++)
 	{
-		if (player_list[i].player_name == current_player.player_name)
+		if (player_list[i].player_symbol == current_player.player_symbol)
 		{
 			if ((i + 1) >= player_list.size())
 			{
@@ -209,21 +250,20 @@ Player set_player(vector<Player> player_list, Player current_player)
 	}
 
 	//iterate to next player down the list, go back to beginning if necessary
-
 	return next_player;
 }
 //function that makes move on the board
-vector<vector<string>> make_move(vector<vector<string>> board, tuple<int, int> player_move, string player)
+vector<vector<string>> Board::make_move(vector<vector<string>> board, tuple<int, int> player_move, string player)
 {
 	board[get<0>(player_move)][get<1>(player_move)] = player;
 	return board;
 }
 
 //function that checks if move is legal
-check_move is_valid_moveset(vector<vector<string>> board, tuple<int, int> move, string player)
+Board::check_move Board::is_valid_moveset(vector<vector<string>> board, tuple<int, int> move, string player)
 {
 	check_move movecheck;
-	
+
 	if ((get<1>(move) >= 0 && get<1>(move) < board[0].size()) &&
 		(get<0>(move) >= 0 && get<0>(move) < board.size()))
 	{
@@ -248,7 +288,7 @@ check_move is_valid_moveset(vector<vector<string>> board, tuple<int, int> move, 
 }
 
 //function that checks if move is legal (and if board is full) **DEPRECATED**
-tuple<int, int> is_valid_move(vector<vector<string>> board, string player)
+tuple<int, int> Board::is_valid_move(vector<vector<string>> board, string player)
 {
 
 	tuple<int, int> player_move;
@@ -282,7 +322,7 @@ tuple<int, int> is_valid_move(vector<vector<string>> board, string player)
 }
 
 //function that checks win conditions
-bool check_win(vector<vector<string>> board, string current_player)
+bool Board::check_win(vector<vector<string>> board, string current_player)
 {
 	bool winner = false;
 
@@ -426,7 +466,7 @@ bool check_win(vector<vector<string>> board, string current_player)
 }
 
 //function that checks to see if all moves have been made
-bool check_draw(vector<vector<string>> board)
+bool Board::check_draw(vector<vector<string>> board)
 {
 	bool draw = true;
 
@@ -444,7 +484,7 @@ bool check_draw(vector<vector<string>> board)
 	return draw;
 }
 
-bool check_endstate(vector<vector<string>> board, string player)
+bool Board::check_endstate(vector<vector<string>> board, string player)
 {
 	bool winner = false;
 	bool draw = false;
@@ -466,17 +506,17 @@ bool check_endstate(vector<vector<string>> board, string player)
 	return false;
 }
 
-void win_print(string player)
+void Board::win_print(string player)
 {
 	cout << "Player " << player << " has won." << endl;
 }
 
-bool check_continue()
+bool Board::check_continue()
 {
 	char continue_game;
 	bool input = true;
 
-	
+
 
 	do
 	{
@@ -499,28 +539,75 @@ bool check_continue()
 
 }
 
-vector<winner> archive_wins(vector<winner> game_record, Player current_winner)
+void Board::play()
 {
-	winner new_winner;
-	new_winner.player_name = current_winner.player_name;
-	new_winner.number_of_wins = 1;
+	//Create a new board
+	vector<vector<string>> board = new_board();
 
-	if (game_record.size() == 0)
+	//display empty board
+
+	bool continue_game = true;
+	bool winner = false;
+	bool draw = false;;
+
+	tuple<int, int> player_move;
+
+	check_move move_check;
+
+	//lambda which will switch between which AI function that is chosen
+	//std::function <tuple<int, int>(vector<vector<string>>, string)> AI;
+
+	//get the player names
+	//vector<string> player_names = get_players(2);
+
+	Player current_player;
+
+	current_player = playerList[0];
+
+	//Start Game
+
+	render(board);
+
+
+	while (continue_game)
 	{
-		game_record.push_back(new_winner);
-		return game_record;
-	}
 
 
-	for (int i = 0; i < game_record.size(); i++)
-	{
-		if (game_record[i].player_name == current_winner.player_name)
+
+		do
 		{
-			game_record[i].number_of_wins = game_record[i].number_of_wins + 1;
-			return game_record;
+			player_move = get_move(board, current_player.player_name, current_player.player_symbol);
+
+			move_check = is_valid_moveset(board, player_move, current_player.player_symbol);
+
+			//if move is false, show error message
+
+			if (move_check.valid_move == false)
+			{
+				cout << move_check.error_message << endl;
+			}
+
+
+		} while (move_check.valid_move == false);
+
+		//make the move since it now valid
+
+		board = make_move(board, player_move, current_player.player_symbol);
+
+		render(board);
+
+		//check if there is an endstate to the board (win or draw)
+
+		if (check_endstate(board, current_player.player_symbol))
+		{
+			current_winner =  current_player;
+			break;
 		}
+
+		current_player = set_player(playerList, current_player);
+
 	}
-	game_record.push_back(new_winner);
-	return game_record;
 }
+
+
 

@@ -1,4 +1,6 @@
-#include "board.h"
+//#include "Board.h"
+//#include "Player.h"
+
 #include <vector>
 #include <iostream>
 #include <string>
@@ -133,7 +135,6 @@ tuple<int, int> find_winning_then_blocking_moves_ai(vector<vector<string>> board
 	}
 
 }
-
 
 int minmax_score(vector<vector<string>> board, string current_player, string opponent, string alternating_player)
 {

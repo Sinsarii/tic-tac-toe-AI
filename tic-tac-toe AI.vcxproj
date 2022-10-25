@@ -139,13 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ai.cpp" />
-    <ClCompile Include="board.cpp" />
+    <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Session.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ai.h" />
-    <ClInclude Include="board.h" />
+    <ClInclude Include="Board.h" />
+    <ClInclude Include="Session.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="winner.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
