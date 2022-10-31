@@ -150,7 +150,7 @@ int minmax_score(vector<vector<string>> board, string current_player, string opp
 	}
 	else if (check_draw(board))
 	{
-		return 0;
+		return 0;[]
 	}
 
 	//if board is not in a terminal state, get all possible moves

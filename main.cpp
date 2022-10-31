@@ -72,7 +72,7 @@ void play_game()
 	int test_amount = 0;
 
 	//menu to get player information
-	tictactoeBoard.playerList = tictactoeBoard.get_players(2);
+	//tictactoeBoard.playerList = tictactoeBoard.get_players(2);
 	//play game
 	do
 	{
@@ -80,6 +80,7 @@ void play_game()
 		//continue_game = check_continue();
 		current_session.archive_wins(tictactoeBoard.current_winner);
 		test_amount++;
+		tictactoeBoard.reset();
 	} while (continue_game && (test_amount < 10));
 	//test_board();
 		
