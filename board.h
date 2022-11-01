@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <tuple>
+#include <map>
 
 
 using namespace std;
@@ -24,6 +25,8 @@ class Board
 		vector<Player> playerList;
 
 		vector<vector<string>> board;
+
+		map<string, int> HASH_MAP;
 
 		vector<Player> get_players(int number_players);
 
@@ -64,6 +67,10 @@ class Board
 		tuple<int, int> find_winning_moves_ai(vector<vector<string>> board, string player);
 
 		tuple<int, int> find_winning_then_blocking_moves_ai(vector<vector<string>> board, string player);
+
+		string hash_Board(vector<vector<string>> board);
+
+		bool check_hash_map(string hash);
 
 		int minmax_score(vector<vector<string>> board, string current_player, string opponent, string alternating_player);
 

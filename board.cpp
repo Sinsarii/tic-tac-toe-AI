@@ -671,6 +671,33 @@ tuple<int, int> Board::find_winning_then_blocking_moves_ai(vector<vector<string>
 
 }
 
+string Board::hash_Board(vector<vector<string>> board)
+{
+	string board_hash = "";
+
+	for (int i = 0; i < board.size(); i++)
+	{
+		for (int j = 0; j < board[i].size(); j++)
+		{
+			board_hash = board_hash.append(board[i][j]);
+		}
+	}
+
+	return board_hash;
+}
+
+bool Board::check_hash_map(string hash)
+{
+	if (HASH_MAP.find(hash) == HASH_MAP.end())
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
 int Board::minmax_score(vector<vector<string>> board, string current_player, string opponent, string alternating_player)
 {
 
@@ -730,6 +757,7 @@ tuple<int, int> Board::minmax(vector<vector<string>> board, string current_playe
 
 	//initialize at less than -10 so that all numbers will be larger
 	int top_score = -20;
+	int score;
 
 	for (int i = 0; i < possible_moves.size(); i++)
 	{
@@ -739,7 +767,18 @@ tuple<int, int> Board::minmax(vector<vector<string>> board, string current_playe
 		//make move on new board
 		new_board = make_move(board, possible_moves[i], current_player);
 
-		int score = minmax_score(new_board, current_player, opponent, swap_player(current_player));
+		//check if the board has already been calculated
+		string board_hash = hash_Board(new_board);
+
+		if (check_hash_map(board_hash))
+		{
+			score = HASH_MAP[board_hash];
+		}
+		else
+		{
+			score = minmax_score(new_board, current_player, opponent, swap_player(current_player));
+			HASH_MAP.insert(pair<string,int>(board_hash, score));
+		}
 
 		if (score > top_score)
 		{
@@ -754,7 +793,7 @@ tuple<int, int> Board::minmax(vector<vector<string>> board, string current_playe
 Board::Board()
 {
 	//Get all player and board information
-	playerList = get_players(3);
+	playerList = get_players(2);
 
 	//create a new board and display it
 	board = new_board();
